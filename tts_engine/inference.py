@@ -30,7 +30,7 @@ load_dotenv()
 
 # Detect hardware capabilities and display information
 import torch
-import psutil
+# psutil imported later if available
 
 # Detect if we're on a high-end system based on hardware capabilities
 HIGH_END_GPU = False
@@ -61,10 +61,16 @@ if torch.cuda.is_available():
             print(f"📊 Compute Capability: {compute_capability}")
             print("🚀 Using GPU-optimized settings")
 else:
-    # Get CPU info
-    cpu_cores = psutil.cpu_count(logical=False)
-    cpu_threads = psutil.cpu_count(logical=True)
-    ram_gb = psutil.virtual_memory().total / (1024**3)
+    # Get CPU info without failing if psutil isn't installed
+    try:
+        import psutil
+        cpu_cores = psutil.cpu_count(logical=False)
+        cpu_threads = psutil.cpu_count(logical=True)
+        ram_gb = psutil.virtual_memory().total / (1024**3)
+    except ImportError:
+        cpu_cores = os.cpu_count() or 4
+        cpu_threads = os.cpu_count() or 8
+        ram_gb = 16.0
     
     if not IS_RELOADER:
         print(f"🖥️ Hardware: CPU only (No CUDA GPU detected)")

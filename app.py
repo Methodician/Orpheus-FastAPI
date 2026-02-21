@@ -393,5 +393,4 @@ if __name__ == "__main__":
     # Include restart.flag in the reload_dirs to monitor it for changes
     extra_files = ["restart.flag"] if os.path.exists("restart.flag") else []
     
-    # Start with reload enabled to allow automatic restart when restart.flag changes
-    uvicorn.run("app:app", host=host, port=port, reload=True, reload_dirs=["."], reload_includes=["*.py", "*.html", "restart.flag"])
+    uvicorn.run("app:app", host=host, port=port)
